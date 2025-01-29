@@ -66,9 +66,9 @@ const PatientDetails = () => {
   );
 
 
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  })
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current,
+  // })
 
   const handleDelete = async (id) => {
     try {
