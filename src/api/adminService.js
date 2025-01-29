@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'https://nagrath-backend.onrender.com/api/auth';
-
+const API_URL = 'https://nagrath-backend-rk2z.onrender.com/api/auth';
+//https://nagrath-backend-rk2z.onrender.com
 // Fetch all admins
 export const getAdmins = async (token) => {
   const response = await axios.get(`${API_URL}/admins`, {
