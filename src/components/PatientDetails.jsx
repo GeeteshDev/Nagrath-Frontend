@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deletePatient, getPatientById } from '../api/patientService';
 import { FaUserEdit, FaTrash } from 'react-icons/fa';
-import { useReactToPrint } from 'react-to-print';
+//import { useReactToPrint } from 'react-to-print';
 import SuperAdminLayout from './Layouts/SuperAdminLayout';
 import {
   Table,
@@ -99,7 +99,6 @@ const PatientDetails = () => {
         <div ref={componentRef}>
           <PatientCard patient={patient} />
         </div>
-        <button onClick={handlePrint}>Print Patient Card</button>
       </div>
 
       {/* General Information Table */}
