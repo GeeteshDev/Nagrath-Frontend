@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://nagrath-backend.onrender.com/api/auth';
+const API_URL = 'https://nagrath-backend-rk2z.onrender.com/api/auth';
 
 // User login (Super Admin or Admin)
 export const login = async (credentials) => {
