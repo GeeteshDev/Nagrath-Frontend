@@ -665,14 +665,15 @@ const CreatePatient = () => {
                         ))}
                       </select>
                     ) : (
-                      <input
-                        type="text"
-                        name={`lipidProfile.${test.name}.range`}
-                        value={formData.lipidProfile[test.name]?.range || ''}
-                        onChange={handleChange}
-                        placeholder={`Enter Range for ${test.label}`}
-                        className="w-full border p-2"
-                      />
+                  <span>{formData.lipidProfile[test.name]?.range || ''}</span>
+                      // <input
+                      //   type="text"
+                      //   name={`lipidProfile.${test.name}.range`}
+                      //   value={formData.lipidProfile[test.name]?.range || ''}
+                      //   onChange={handleChange}
+                      //   placeholder={`Enter Range for ${test.label}`}
+                      //   className="w-full border p-2"
+                      // />
                     )}
                   </td>
                 </tr>
