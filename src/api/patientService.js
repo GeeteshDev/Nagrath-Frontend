@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const BASE_URL = `http://localhost:5000/api/patients`;
+const BASE_URL = `https://nagrath-backend-5h1t.onrender.com/api/patients`;
 
 // Search patients based on filters
 export const searchPatients = async (token, searchParams = {}) => {
