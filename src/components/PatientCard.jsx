@@ -13,7 +13,7 @@ const PatientCard = ({ patient }) => {
   return (
     <div ref={cardRef} className="p-6 bg-white shadow-md rounded-lg flex items-center justify-between max-w-3xl mx-auto">
       {/* Patient Photo */}
-      <div className="flex items-center">
+{/*       <div className="flex items-center">
         {patient.photo ? (
           <img
             src={patient.photo}
@@ -25,7 +25,7 @@ const PatientCard = ({ patient }) => {
             <span className="text-gray-500">No photo available</span>
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* Patient Details */}
       <div className="flex-1 mx-6">
