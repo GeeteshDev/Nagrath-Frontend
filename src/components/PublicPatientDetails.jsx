@@ -4,6 +4,33 @@ import { getPublicPatientById } from '../api/patientService';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
+import PatientCard from './PatientCard'; 
+
+const TestTable = ({ title, data }) => (
+  <TableContainer component={Paper} className="p-4 mb-6">
+    <Typography variant="h6" gutterBottom>{title}</Typography>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
+          <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
+          <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
+          <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {Object.entries(data).map(([label, test]) => (
+          <TableRow key={label}>
+            <TableCell className="border border-gray-400"><strong>{label}:</strong></TableCell>
+            <TableCell className="border border-gray-400">{test?.value || 'N/A'}</TableCell>
+            <TableCell className="border border-gray-400">{test?.unit || '-'}</TableCell>
+            <TableCell className="border border-gray-400">{test?.range || '-'}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+);
 
 const PublicPatientDetails = () => {
   const { id } = useParams();
@@ -16,7 +43,14 @@ const PublicPatientDetails = () => {
     const fetchPatient = async () => {
       try {
         const data = await getPublicPatientById(id);
-        setPatient(data);
+        setPatient({
+          ...data,
+          urineTest: data.urineTest || {},
+          bloodCbc: data.bloodCbc || {},
+          lipidProfile: data.lipidProfile || {},
+          tshTest: data.tshTest || {},
+          medicalHistory: data.medicalHistory || {}
+        });
       } catch (err) {
         console.error(err);
         setError(
@@ -41,13 +75,24 @@ const PublicPatientDetails = () => {
     });
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return (
+    <div className="flex justify-center items-center min-h-screen">
+      <p className="text-gray-600 text-xl">Loading patient details...</p>
+    </div>
+  );
+
+  if (error) return (
+    <div className="flex justify-center items-center min-h-screen">
+      <p className="text-red-600 text-xl">{error}</p>
+    </div>
+  );
 
   return (
-    <div ref={componentRef}>
+    <div ref={componentRef} className="p-4">
       {patient ? (
         <>
+          <PatientCard patient={patient} />
+
           {/* General Information Table */}
           <TableContainer component={Paper} className="p-4 mb-6">
             <Typography variant="h6" gutterBottom>Patient Information</Typography>
@@ -72,16 +117,32 @@ const PublicPatientDetails = () => {
                   <TableCell className="border border-gray-400">{patient.gender || 'N/A'}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Aadhar Number:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.aadharNumber || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
                   <TableCell className="border border-gray-400"><strong>Date of Birth:</strong></TableCell>
                   <TableCell className="border border-gray-400">{patient.dateOfBirth || 'N/A'}</TableCell>
                 </TableRow>
                 <TableRow>
+                  <TableCell className="border border-gray-400"><strong>Blood Group:</strong></TableCell>
+                  <TableCell className="border border-gray-400">{patient.bloodGroup || 'N/A'}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="border border-gray-400"><strong>Aadhar Number:</strong></TableCell>
+                  <TableCell className="border border-gray-400">{patient.aadharNumber || 'N/A'}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="border border-gray-400"><strong>Address:</strong></TableCell>
+                  <TableCell className="border border-gray-400">{patient.address || 'N/A'}</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell className="border border-gray-400"><strong>City:</strong></TableCell>
                   <TableCell className="border border-gray-400">{patient.city || 'N/A'}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="border border-gray-400"><strong>Pincode:</strong></TableCell>
+                  <TableCell className="border border-gray-400">{patient.pincode || 'N/A'}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="border border-gray-400"><strong>District:</strong></TableCell>
+                  <TableCell className="border border-gray-400">{patient.district || 'N/A'}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="border border-gray-400"><strong>State:</strong></TableCell>
@@ -94,154 +155,105 @@ const PublicPatientDetails = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          {/* Tests and Measurements  */}
-          <TableContainer component={Paper} className="p-4 mb-6">
-            <Typography variant="h6" gutterBottom>Tests and Measurements</Typography>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
-                  <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
-                  <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
-                  <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Hemoglobin</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.hemoglobin?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.hemoglobin?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.hemoglobin?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Blood Group:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.bloodGroup?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.bloodGroup?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.bloodGroup?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Blood Pressure:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.bloodPressure?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.bloodPressure?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.bloodPressure?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Heart Rate</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.heartRate?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.heartRate?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.heartRate?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Weight</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.weight?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.weight?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.weight?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Fasting Blood Sugar:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.fastingBloodSugar?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.fastingBloodSugar?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.fastingBloodSugar?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>CBC:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.cbc?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.cbc?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.cbc?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Urinalysis:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.urinalysis?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.urinalysis?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.urinalysis?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Serum Electrolytes:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.serumElectrolytes?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.serumElectrolytes?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.serumElectrolytes?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Lipid Profile:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.lipidProfile?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.lipidProfile?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.lipidProfile?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>TSH:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.tsh?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.tsh?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.tsh?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>SGPT:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.sgpt?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.sgpt?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.sgpt?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Platelet Count</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.platelet?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.platelet?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.platelet?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>HIV:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.hiv?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.hiv?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.hiv?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Chronic Disease</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.chronicDisease?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.chronicDisease?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.chronicDisease?.range || 'N/A'}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-          {/* Medical Repots  */}
-          <TableContainer component={Paper} className="p-4 mb-6">
-            <Typography variant="h6" gutterBottom>Medical History</Typography>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Category</strong></TableCell>
-                  <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
-                  <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
-                  <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Current Medication:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.medicalHistory?.currentMedication?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.medicalHistory?.currentMedication?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.medicalHistory?.currentMedication?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Previous Condition:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.medicalHistory?.previousCondition?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.medicalHistory?.previousCondition?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.medicalHistory?.previousCondition?.range || 'N/A'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="border border-gray-400"><strong>Vaccination:</strong></TableCell>
-                  <TableCell className="border border-gray-400">{patient.medicalHistory?.vaccination?.value || 'N/A'}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.medicalHistory?.vaccination?.unit || ''}</TableCell>
-                  <TableCell className="border border-gray-400">{patient.medicalHistory?.vaccination?.range || 'N/A'}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
 
-          </TableContainer>
+
+          <TestTable title="Basic Tests" data={{
+            'Hemoglobin': patient.hemoglobin,
+            'Blood Pressure': patient.bloodPressure,
+            'Heart Rate': patient.heartRate,
+            'Fasting Blood Sugar': patient.fastingBloodSugar,
+            'Calcium': patient.calcium
+          }} />
+
+          <TestTable title="Blood CBC" data={{
+            "R.B.C Count": patient.bloodCbc?.rbcCount,
+            "Packed Cell Volume (HCT)": patient.bloodCbc?.packedCellVolume,
+            "Mean Cell Volume (MCV)": patient.bloodCbc?.meanCellVolume,
+            "Mean Cell Hemoglobin (MCH)": patient.bloodCbc?.meanCellHemoglobin,
+            "Mean Cell Hb Conc (MCHC)": patient.bloodCbc?.meanCellHbConc,
+            "RDW (CV)": patient.bloodCbc?.rdwCV,
+            "RDW (SD)": patient.bloodCbc?.rdwSD,
+            "Total W.B.C Count": patient.bloodCbc?.twbcCount,
+          }} />
+
+          <TestTable title="Urine Test" data={{
+            "Colour": patient.urineTest?.colour,
+            "Appearance": patient.urineTest?.appearance,
+            "Reaction": patient.urineTest?.reaction,
+            "Specific Gravity": patient.urineTest?.specificGravity,
+            "Pus Cells": patient.urineTest?.pusCells,
+            "Epithelial Cells": patient.urineTest?.epithelialCells,
+            "Red Blood Cells": patient.urineTest?.redBloodCell,
+            "Spermatozoa": patient.urineTest?.spermatozoa,
+            "Casts": patient.urineTest?.casts,
+            "Crystals": patient.urineTest?.crystals,
+            "Yeast Cells": patient.urineTest?.yeastCell,
+            "Bacteria": patient.urineTest?.bacteria,
+            "ESR": patient.urineTest?.esr
+          }} />
+
+          <TestTable title="Lipid Profile" data={{
+            "Cholesterol - Total": patient.lipidProfile?.cholesterolTotal,
+            "Triglycerides": patient.lipidProfile?.triglycerides,
+            "HDL Cholesterol": patient.lipidProfile?.hdlCholesterol,
+            "LDL Cholesterol": patient.lipidProfile?.ldlCholesterol,
+            "VLDL Cholesterol": patient.lipidProfile?.vldlCholesterol,
+            "Cholesterol/HDL Chol Ratio": patient.lipidProfile?.cholHdlCholRatio,
+            "LDL Chol/HDL Chol Ratio": patient.lipidProfile?.ldlHdlCholRatio
+          }} />
+
+          <TestTable title="Thyroid Tests" data={{
+            "Triiodothyronine (T3)": patient.tshTest?.triiodothyronine,
+            "Thyroxine (T4)": patient.tshTest?.thyroxine,
+            "TSH (Thyroid Stimulating Hormo : )":  patient.tshTest?.tsh,
+            "SGOT (AST)": patient.tshTest?.sgot,
+            "SGPT (ALT)": patient.tshTest?.sgpt,
+            "Alkaline Phosphatase": patient.tshTest?.alkalinePhosphatase,
+            "Total Protein": patient.tshTest?.totalProtein,
+            "Albumin": patient.tshTest?.albumin,
+            "Globulin": patient.tshTest?.globulin,
+            "AIb/Glo Ratio": patient.tshTest?.albRatio,
+            "Platelet count": patient.tshTest?.plateletCount,
+            "Mean Platelet Volume (M : )": patient.tshTest?.mpv,
+            "Plateletcrit": patient.tshTest?.plateletcrit
+          }} />
+
+          <div className="mt-8">
+            <h3 className="text-xl font-semibold mb-4">Document Files</h3>
+            <div className="grid grid-cols-2 gap-4">
+              {Array.isArray(patient.documentFile) && patient.documentFile.length > 0 ? (
+                patient.documentFile.map((doc, index) => (
+                  <img
+                    key={index}
+                    src={`data:${doc.contentType};base64,${Buffer.from(doc.data).toString('base64')}`}
+                    alt={`Document ${index + 1}`}
+                    className="w-full h-64 object-contain rounded-lg border"
+                  />
+                ))
+              ) : patient.documentFile?.data ? (
+                <img
+                  src={`data:${patient.documentFile.contentType};base64,${Buffer.from(patient.documentFile.data).toString('base64')}`}
+                  alt="Document File"
+                  className="w-full h-64 object-contain rounded-lg border"
+                />
+              ) : (
+                <p className="text-gray-500">No document files available</p>
+              )}
+            </div>
+          </div>
         </>
       ) : (
         <p>No patient details available</p>
       )}
-      <div className='mb-10 ml-5'>
-        <Button variant="contained" color="primary" onClick={downloadPDF} className="">
-          Download as PDF
+
+      <div className="mt-6 text-center">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={downloadPDF}
+          className="bg-blue-600 hover:bg-blue-700"
+        >
+          Download Full Report as PDF
         </Button>
       </div>
     </div>
@@ -249,3 +261,4 @@ const PublicPatientDetails = () => {
 };
 
 export default PublicPatientDetails;
+
