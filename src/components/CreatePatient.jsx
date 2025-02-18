@@ -582,7 +582,7 @@ const CreatePatient = () => {
             </tbody>
           </table>
 
-          {/* Urine test  */}
+          {/* Urine test */}
           <h2 className="text-lg font-bold mt-8 mb-4">Urine test</h2>
           <table className="w-full border-collapse border border-gray-300">
             <thead>
@@ -599,15 +599,6 @@ const CreatePatient = () => {
                 { label: 'Appearance', name: 'appearance', unit: '', range: 'Clear' },
                 { label: 'Reaction (pH)', name: 'reaction', unit: '', range: '6.0-8.5' },
                 { label: 'Specific Gravity', name: 'specificGravity', unit: '', range: '1.005-1.030' },
-                { label: 'Pus Cells', name: 'pusCells', unit: '/HPF', range: '0-5' },
-                { label: 'Epithelial Cells', name: 'epithelialCells', unit: '/HPF', range: '-' },
-                { label: 'Red Blood Cells', name: 'redBloodCell', unit: '/HPF', range: 'Nil' },
-                { label: 'Spermatozoa', name: 'spermatozoa', unit: '/HPF', range: 'Absent' },
-                { label: 'Casts', name: 'casts', unit: '/HPF', range: 'Absent' },
-                { label: 'Crystals', name: 'crystals', unit: '/HPF', range: 'Absent' },
-                { label: 'Yeast Cell', name: 'yeastCell', unit: '/HPF', range: 'Absent' },
-                { label: 'Bacteria', name: 'bacteria', unit: '/HPF', range: 'Absent' },
-                { label: 'ESR (ERYTHROCYTE SEDIMENTATION RATE)', name: 'esr', unit: 'mm/1hr.', range: ['1-13 male', '0-20 female'] },
               ].map((test) => (
                 <tr key={test.name} className="border border-gray-300">
                   <td className="p-2 border border-gray-300 font-medium">{test.label}</td>
@@ -646,9 +637,225 @@ const CreatePatient = () => {
                   </td>
                 </tr>
               ))}
+
+              {/* Adding heading for MICROSCOPIC Examination */}
+              <tr>
+                <td colSpan="4" className="bg-gray-100 text-center text-lg font-semibold py-2">
+                  MICROSCOPIC Examination
+                </td>
+              </tr>
+
+              {/* Pus Cells row under MICROSCOPIC Examination */}
+              <tr className="border border-gray-300">
+                <td className="p-2 border border-gray-300 font-medium">Pus Cells</td>
+                <td className="p-2 border border-gray-300">
+                  <input
+                    type="text"
+                    name="urineTest.pusCells.value"
+                    value={formData.urineTest.pusCells?.value || ''}
+                    onChange={handleChange}
+                    placeholder="Enter Pus Cells value"
+                    required
+                    className="w-full border p-2"
+                  />
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>/HPF</span>
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>0-5</span>
+                </td>
+              </tr>
+
+              {/* Epithelial Cells */}
+              <tr className="border border-gray-300">
+                <td className="p-2 border border-gray-300 font-medium">Epithelial Cells</td>
+                <td className="p-2 border border-gray-300">
+                  <input
+                    type="text"
+                    name="urineTest.epithelialCells.value"
+                    value={formData.urineTest.epithelialCells?.value || ''}
+                    onChange={handleChange}
+                    placeholder="Enter Epithelial Cells value"
+                    required
+                    className="w-full border p-2"
+                  />
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>/HPF</span>
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>-</span>
+                </td>
+              </tr>
+
+              {/* Red Blood Cells */}
+              <tr className="border border-gray-300">
+                <td className="p-2 border border-gray-300 font-medium">Red Blood Cells</td>
+                <td className="p-2 border border-gray-300">
+                  <input
+                    type="text"
+                    name="urineTest.redBloodCell.value"
+                    value={formData.urineTest.redBloodCell?.value || ''}
+                    onChange={handleChange}
+                    placeholder="Enter Red Blood Cells value"
+                    required
+                    className="w-full border p-2"
+                  />
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>/HPF</span>
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>Nil</span>
+                </td>
+              </tr>
+
+              {/* Spermatozoa */}
+              <tr className="border border-gray-300">
+                <td className="p-2 border border-gray-300 font-medium">Spermatozoa</td>
+                <td className="p-2 border border-gray-300">
+                  <input
+                    type="text"
+                    name="urineTest.spermatozoa.value"
+                    value={formData.urineTest.spermatozoa?.value || ''}
+                    onChange={handleChange}
+                    placeholder="Enter Spermatozoa value"
+                    required
+                    className="w-full border p-2"
+                  />
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>/HPF</span>
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>Absent</span>
+                </td>
+              </tr>
+
+              {/* Casts */}
+              <tr className="border border-gray-300">
+                <td className="p-2 border border-gray-300 font-medium">Casts</td>
+                <td className="p-2 border border-gray-300">
+                  <input
+                    type="text"
+                    name="urineTest.casts.value"
+                    value={formData.urineTest.casts?.value || ''}
+                    onChange={handleChange}
+                    placeholder="Enter Casts value"
+                    required
+                    className="w-full border p-2"
+                  />
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>/HPF</span>
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>Absent</span>
+                </td>
+              </tr>
+
+              {/* Crystals */}
+              <tr className="border border-gray-300">
+                <td className="p-2 border border-gray-300 font-medium">Crystals</td>
+                <td className="p-2 border border-gray-300">
+                  <input
+                    type="text"
+                    name="urineTest.crystals.value"
+                    value={formData.urineTest.crystals?.value || ''}
+                    onChange={handleChange}
+                    placeholder="Enter Crystals value"
+                    required
+                    className="w-full border p-2"
+                  />
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>/HPF</span>
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>Absent</span>
+                </td>
+              </tr>
+
+              {/* Yeast Cell */}
+              <tr className="border border-gray-300">
+                <td className="p-2 border border-gray-300 font-medium">Yeast Cell</td>
+                <td className="p-2 border border-gray-300">
+                  <input
+                    type="text"
+                    name="urineTest.yeastCell.value"
+                    value={formData.urineTest.yeastCell?.value || ''}
+                    onChange={handleChange}
+                    placeholder="Enter Yeast Cell value"
+                    required
+                    className="w-full border p-2"
+                  />
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>/HPF</span>
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>Absent</span>
+                </td>
+              </tr>
+
+              {/* Bacteria */}
+              <tr className="border border-gray-300">
+                <td className="p-2 border border-gray-300 font-medium">Bacteria</td>
+                <td className="p-2 border border-gray-300">
+                  <input
+                    type="text"
+                    name="urineTest.bacteria.value"
+                    value={formData.urineTest.bacteria?.value || ''}
+                    onChange={handleChange}
+                    placeholder="Enter Bacteria value"
+                    required
+                    className="w-full border p-2"
+                  />
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>/HPF</span>
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>Absent</span>
+                </td>
+              </tr>
+
+              {/* ESR (ERYTHROCYTE SEDIMENTATION RATE) */}
+              <tr className="border border-gray-300">
+                <td className="p-2 border border-gray-300 font-medium">ESR (ERYTHROCYTE SEDIMENTATION RATE)</td>
+                <td className="p-2 border border-gray-300">
+                  <input
+                    type="text"
+                    name="urineTest.esr.value"
+                    value={formData.urineTest.esr?.value || ''}
+                    onChange={handleChange}
+                    placeholder="Enter ESR value"
+                    required
+                    className="w-full border p-2"
+                  />
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <span>mm/1hr.</span>
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <select
+                    name="urineTest.esr.range"
+                    value={formData.urineTest.esr?.range || ''}
+                    onChange={handleChange}
+                    className="w-full border p-2"
+                  >
+                    <option value="" disabled>Select Range</option>
+                    {['1-13 male', '0-20 female'].map((range, index) => (
+                      <option key={index} value={range}>
+                        {range}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
             </tbody>
           </table>
-
           {/* Lipid Profile */}
           <h2 className="text-lg font-bold mt-8 mb-4">Lipid Profile</h2>
           <table className="w-full border-collapse border border-gray-300">
