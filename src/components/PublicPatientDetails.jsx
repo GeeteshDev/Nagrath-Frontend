@@ -215,7 +215,11 @@ const PublicPatientDetails = () => {
             "AIb/Glo Ratio": patient.tshTest?.albRatio,
             "Platelet count": patient.tshTest?.plateletCount,
             "Mean Platelet Volume (M : )": patient.tshTest?.mpv,
-            "Plateletcrit": patient.tshTest?.plateletcrit
+            "Platelet Distribution (PDW)": patient.tshTest?.pdw,
+            "HIV I Antibodies": patient.tshTest?.hivFirst,
+            "HIV II Antibodies": patient.tshTest?.hivSecond,
+            "HBA1C": patient.tshTest?.HBA1C,
+          
           }} />
 
           <div className="mt-8">
