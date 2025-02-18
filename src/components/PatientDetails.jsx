@@ -265,7 +265,10 @@ const PatientDetails = () => {
             {renderTestRow("AIb/Glo Ratio", patient.tshTest?.albRatio)}
             {renderTestRow("Platelet count", patient.tshTest?.plateletCount)}
             {renderTestRow("Mean Platelet Volume (MPV)", patient.tshTest?.mpv)}
-            {renderTestRow("Plateletcrit", patient.tshTest?.plateletcrit)}
+            {renderTestRow("Platelet Distribution (PDW)", patient.tshTest?.pdw)}
+            {renderTestRow("HIV I Antibodies", patient.tshTest?.hivFirst)}
+            {renderTestRow("HIV II Antibodies", patient.tshTest?.hivSecond)}
+            {renderTestRow("HBA1C", patient.tshTest?.HBA1C)}
           </TableBody>
         </Table>
       </TableContainer>
