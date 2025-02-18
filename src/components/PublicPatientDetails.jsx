@@ -181,6 +181,9 @@ const PublicPatientDetails = () => {
             "Appearance": patient.urineTest?.appearance,
             "Reaction": patient.urineTest?.reaction,
             "Specific Gravity": patient.urineTest?.specificGravity,
+          }} />
+
+          <TestTable title="MICROSCOPIC Examination" data={{
             "Pus Cells": patient.urineTest?.pusCells,
             "Epithelial Cells": patient.urineTest?.epithelialCells,
             "Red Blood Cells": patient.urineTest?.redBloodCell,
