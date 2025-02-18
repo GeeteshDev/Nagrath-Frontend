@@ -186,7 +186,7 @@ const PatientDetails = () => {
         </Table>
       </TableContainer>
 
-      {/* Urine Test Table */}
+        {/* Urine Test Table */}
       <TableContainer component={Paper} className="p-4 mb-6">
         <Typography variant="h6" gutterBottom>Urine Test</Typography>
         <Table>
@@ -215,6 +215,33 @@ const PatientDetails = () => {
           </TableBody>
         </Table>
       </TableContainer>
+            
+      {/* Microscopic Examination Table */}
+      <TableContainer component={Paper} className="p-4 mb-6">
+        <Typography variant="h6" gutterBottom>Microscopic Examination</Typography>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
+              <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
+              <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
+              <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {renderTestRow("Pus Cells", patient.urineTest?.pusCells)}
+            {renderTestRow("Epithelial Cells", patient.urineTest?.epithelialCells)}
+            {renderTestRow("Red Blood Cells", patient.urineTest?.redBloodCell)}
+            {renderTestRow("Spermatozoa", patient.urineTest?.spermatozoa)}
+            {renderTestRow("Casts", patient.urineTest?.casts)}
+            {renderTestRow("Crystals", patient.urineTest?.crystals)}
+            {renderTestRow("Yeast Cells", patient.urineTest?.yeastCell)}
+            {renderTestRow("Bacteria", patient.urineTest?.bacteria)}
+            {renderTestRow("ESR", patient.urineTest?.esr)}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
 
       {/* Lipid Profile */}
       <TableContainer component={Paper} className="p-4 mb-6">
