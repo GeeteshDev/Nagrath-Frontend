@@ -203,15 +203,6 @@ const PatientDetails = () => {
             {renderTestRow("Appearance", patient.urineTest?.appearance)}
             {renderTestRow("Reaction", patient.urineTest?.reaction)}
             {renderTestRow("Specific Gravity", patient.urineTest?.specificGravity)}
-            {renderTestRow("Pus Cells", patient.urineTest?.pusCells)}
-            {renderTestRow("Epithelial Cells", patient.urineTest?.epithelialCells)}
-            {renderTestRow("Red Blood Cells", patient.urineTest?.redBloodCell)}
-            {renderTestRow("Spermatozoa", patient.urineTest?.spermatozoa)}
-            {renderTestRow("Casts", patient.urineTest?.casts)}
-            {renderTestRow("Crystals", patient.urineTest?.crystals)}
-            {renderTestRow("Yeast Cells", patient.urineTest?.yeastCell)}
-            {renderTestRow("Bacteria", patient.urineTest?.bacteria)}
-            {renderTestRow("ESR", patient.urineTest?.esr)}
           </TableBody>
         </Table>
       </TableContainer>
