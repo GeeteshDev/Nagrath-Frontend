@@ -4,7 +4,7 @@ import { getPublicPatientById } from '../api/patientService';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
-import PatientCard from './PatientCard'; 
+import PatientCard from './PatientCard';
 
 const TestTable = ({ title, data }) => (
   <TableContainer component={Paper} className="p-4 mb-6">
@@ -48,8 +48,7 @@ const PublicPatientDetails = () => {
           urineTest: data.urineTest || {},
           bloodCbc: data.bloodCbc || {},
           lipidProfile: data.lipidProfile || {},
-          tshTest: data.tshTest || {},
-          medicalHistory: data.medicalHistory || {}
+          tshTest: data.tshTest || {}
         });
       } catch (err) {
         console.error(err);
@@ -208,7 +207,7 @@ const PublicPatientDetails = () => {
           <TestTable title="Thyroid Tests" data={{
             "Triiodothyronine (T3)": patient.tshTest?.triiodothyronine,
             "Thyroxine (T4)": patient.tshTest?.thyroxine,
-            "TSH (Thyroid Stimulating Hormo : )":  patient.tshTest?.tsh,
+            "TSH (Thyroid Stimulating Hormo : )": patient.tshTest?.tsh,
             "SGOT (AST)": patient.tshTest?.sgot,
             "SGPT (ALT)": patient.tshTest?.sgpt,
             "Alkaline Phosphatase": patient.tshTest?.alkalinePhosphatase,
@@ -217,12 +216,11 @@ const PublicPatientDetails = () => {
             "Globulin": patient.tshTest?.globulin,
             "AIb/Glo Ratio": patient.tshTest?.albRatio,
             "Platelet count": patient.tshTest?.plateletCount,
-            "Mean Platelet Volume (M : )": patient.tshTest?.mpv,
+            "Mean Platelet Volume (MPV)": patient.tshTest?.mpv,
             "Platelet Distribution (PDW)": patient.tshTest?.pdw,
             "HIV I Antibodies": patient.tshTest?.hivFirst,
             "HIV II Antibodies": patient.tshTest?.hivSecond,
             "HBA1C": patient.tshTest?.HBA1C,
-          
           }} />
 
           <div className="mt-8">
