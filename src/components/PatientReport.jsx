@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getPublicPatientById } from '../api/patientService';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material'; 
 
 
 const TestTable = ({ title, data }) => {
