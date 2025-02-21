@@ -82,7 +82,7 @@ const CreatePatient = () => {
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
-  const bloodGroups = ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O', 'O-'];
+  const bloodGroups = ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-'];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
