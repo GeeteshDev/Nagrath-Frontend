@@ -137,23 +137,6 @@ const CreatePatient = () => {
     setDocumentFiles(files);
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault(); // Prevent default form submission
-  //   const user = localStorage.getItem('user');
-  //   const token = user ? JSON.parse(user).token : null;
-  //   if (!token) {
-  //     setError('User not authenticated');
-  //     return;
-  //   }
-  //   try {
-  //     const token = JSON.parse(localStorage.getItem('user')).token;
-  //     await createPatient(formData, token);
-  //     setSuccess('Patient created successfully');
-  //     navigate('/admin/patients');
-  //   } catch (err) {
-  //     setError('Error creating patient');
-  //   }
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 

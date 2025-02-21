@@ -313,7 +313,6 @@ const UpdatePatient = () => {
             {formData.photo && typeof formData.photo === 'string' && (
               <img src={`data:image/jpeg;base64,${formData.photo}`} alt="Patient" className="mb-2 rounded-lg w-24 h-24 object-cover" />
             )}
-            <label htmlFor="Photo" className="mb-2 font-medium">Photo :</label>
             <input
               type="file"
               onChange={handleFileChange}
