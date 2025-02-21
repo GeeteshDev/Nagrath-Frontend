@@ -1,0 +1,26 @@
+@media print {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    tr {
+      page-break-inside: avoid;
+    }
+  
+    td, th {
+      padding: 8px;
+      border: 1px solid black;
+    }
+  
+    /* Prevent breaking large blocks */
+    .no-break {
+      page-break-inside: avoid;
+    }
+  
+    /* Ensure page breaks only happen between sections */
+    .page-break {
+      page-break-before: always;
+    }
+  }
+  

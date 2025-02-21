@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deletePatient, getPatientById } from '../api/patientService';
-import { FaUserEdit, FaTrash } from 'react-icons/fa';
-// import { useReactToPrint } from 'react-to-print';
+import { FaUserEdit, FaTrash, FaPrint, FaArrowCircleDown } from 'react-icons/fa';
 import SuperAdminLayout from './Layouts/SuperAdminLayout';
 import {
   Table,
@@ -14,6 +13,7 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
+import '../components/Utils/Print.css';
 import PatientCard from './PatientCard';
 
 const PatientDetails = () => {
@@ -21,8 +21,8 @@ const PatientDetails = () => {
   const [patient, setPatient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const componentRef = useRef();
   const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchPatient = async () => {
@@ -31,8 +31,6 @@ const PatientDetails = () => {
         if (storedUser?.token) {
           const token = storedUser.token;
           const data = await getPatientById(id, token);
-          // console.log('hllo')
-          console.log('Patient data:', data);  // Log the entire response
           setPatient({
             ...data,
             urineTest: data.urineTest || {},
@@ -40,7 +38,7 @@ const PatientDetails = () => {
             lipidProfile: data.lipidProfile || {},
             tshTest: data.tshTest || {}
           });
-          
+
         } else {
           throw new Error('No token found');
         }
@@ -66,16 +64,21 @@ const PatientDetails = () => {
     </TableRow>
   );
 
+  const handlePrint = () => {
+    const printContent = document.getElementById('printable-content');
+    const originalContent = document.body.innerHTML;
 
-  // const handlePrint = useReactToPrint({
-  //   content: () => componentRef.current,
-  // })
+    document.body.innerHTML = printContent.innerHTML;
+    window.print();
+    document.body.innerHTML = originalContent;
+    window.location.reload(); // Reload to restore original content
+  };
 
   const handleDelete = async (id) => {
     try {
       const token = JSON.parse(localStorage.getItem('user')).token;
       await deletePatient(id, token);
-      navigate('/admin/patients'); // Redirect to patient list after deletion
+      navigate('/admin/patients');
     } catch (error) {
       console.error("Error deleting patient:", error);
       setError("Failed to delete patient");
@@ -92,185 +95,226 @@ const PatientDetails = () => {
   }
 
 
+
+
   return (
     <SuperAdminLayout>
 
-      {/* Patient Card */}
-      <div>
-        <div ref={componentRef}>
-          <PatientCard patient={patient} />
+      <div id="printable-content">
+        <div>
+          {patient && <PatientCard patient={patient} />}
         </div>
-        {/*<button onClick={handlePrint}>Print Patient Card</button>*/}
-      </div>
 
-      {/* General Information Table */}
-      <TableContainer component={Paper} className="p-4 mb-6 mt-5">
-        <Typography variant="h6" gutterBottom>Patient Information</Typography>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell className="border border-gray-400"><strong>Field</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Details</strong></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {[
-              { label: 'Name', value: patient.name },
-              { label: 'Age', value: patient.age },
-              { label: 'Gender', value: patient.gender },
-              { label: 'Date of Birth', value: patient.dateOfBirth },
-              { label: 'Blood Group', value: patient.bloodGroup },
-              { label: 'Mobile', value: patient.mobile },
-              { label: 'Aadhar Number', value: patient.aadharNumber },
-              { label: 'Address', value: patient.address },
-              { label: 'City', value: patient.city },
-              { label: 'Pincode', value: patient.pincode },
-              { label: 'District', value: patient.district },
-              { label: 'State', value: patient.state },
-              { label: 'Country', value: patient.country },
-            ].map(({ label, value }, index) => (
-              <TableRow key={index}>
-                <TableCell className="border border-gray-400"><strong>{label}:</strong></TableCell>
-                <TableCell className="border border-gray-400">{renderField(value)}</TableCell>
+        {/* General Information Table */}
+        <TableContainer component={Paper} className="p-4 mb-6 mt-5">
+          <Typography variant="h6" gutterBottom>Patient Information</Typography>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className="border border-gray-400"><strong>Field</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Details</strong></TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {[
+                { label: 'Name', value: patient.name },
+                { label: 'Age', value: patient.age },
+                { label: 'Gender', value: patient.gender },
+                { label: 'Date of Birth', value: patient.dateOfBirth },
+                { label: 'Blood Group', value: patient.bloodGroup },
+                { label: 'Mobile', value: patient.mobile },
+                { label: 'Aadhar Number', value: patient.aadharNumber },
+                { label: 'Address', value: patient.address },
+                { label: 'City', value: patient.city },
+                { label: 'Pincode', value: patient.pincode },
+                { label: 'District', value: patient.district },
+                { label: 'State', value: patient.state },
+                { label: 'Country', value: patient.country },
+              ].map(({ label, value }, index) => (
+                <TableRow key={index}>
+                  <TableCell className="border border-gray-400"><strong>{label}:</strong></TableCell>
+                  <TableCell className="border border-gray-400">{renderField(value)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-      {/* Tests and Measurements Table */}
-      <TableContainer component={Paper} className="p-4 mb-6">
-        <Typography variant="h6" gutterBottom>Tests and Measurements</Typography>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {renderTestRow("Hemoglobin", patient.hemoglobin)}
-            {renderTestRow("Blood Pressure", patient.bloodPressure)}
-            {renderTestRow("Heart Rate", patient.heartRate)}
-            {renderTestRow("Fasting Blood Sugar", patient.fastingBloodSugar)}
-            {renderTestRow("Calcium", patient.calcium)}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        {/* Tests and Measurements Table */}
+        <TableContainer component={Paper} className="p-4 mb-6">
+          <Typography variant="h6" gutterBottom>Tests and Measurements</Typography>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {renderTestRow("Hemoglobin", patient.hemoglobin)}
+              {renderTestRow("Blood Pressure", patient.bloodPressure)}
+              {renderTestRow("Heart Rate", patient.heartRate)}
+              {renderTestRow("Fasting Blood Sugar", patient.fastingBloodSugar)}
+              {renderTestRow("Calcium", patient.calcium)}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
 
-      {/* Blood CBC Test */}
-      <TableContainer component={Paper} className="p-4 mb-6">
-        <Typography variant="h6" gutterBottom>Blood CBC Test</Typography>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {renderTestRow("R.B.C Count", patient.bloodCbc?.rbcCount)}
-            {renderTestRow("Packed Cell Volume (HCT)", patient.bloodCbc?.packedCellVolume)}
-            {renderTestRow("Mean Cell Volume (MCV)", patient.bloodCbc?.meanCellVolume)}
-            {renderTestRow("Mean Cell Hemoglobin (MCH)", patient.bloodCbc?.meanCellHemoglobin)}
-            {renderTestRow("Mean Cell Hb Conc (MCHC)", patient.bloodCbc?.meanCellHbConc)}
-            {renderTestRow("RDW (CV)", patient.bloodCbc?.rdwCV)}
-            {renderTestRow("RDW (SD)", patient.bloodCbc?.rdwSD)}
-            {renderTestRow("Total W.B.C Count", patient.bloodCbc?.twbcCount)}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        {/* Blood CBC Test */}
+        <TableContainer component={Paper} className="p-4 mb-6">
+          <Typography variant="h6" gutterBottom>Blood CBC Test</Typography>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {renderTestRow("R.B.C Count", patient.bloodCbc?.rbcCount)}
+              {renderTestRow("Packed Cell Volume (HCT)", patient.bloodCbc?.packedCellVolume)}
+              {renderTestRow("Mean Cell Volume (MCV)", patient.bloodCbc?.meanCellVolume)}
+              {renderTestRow("Mean Cell Hemoglobin (MCH)", patient.bloodCbc?.meanCellHemoglobin)}
+              {renderTestRow("Mean Cell Hb Conc (MCHC)", patient.bloodCbc?.meanCellHbConc)}
+              {renderTestRow("RDW (CV)", patient.bloodCbc?.rdwCV)}
+              {renderTestRow("RDW (SD)", patient.bloodCbc?.rdwSD)}
+              {renderTestRow("Total W.B.C Count", patient.bloodCbc?.twbcCount)}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-      {/* Urine Test Table */}
-      <TableContainer component={Paper} className="p-4 mb-6">
-        <Typography variant="h6" gutterBottom>Urine Test</Typography>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {renderTestRow("Colour", patient.urineTest?.colour)}
-            {renderTestRow("Appearance", patient.urineTest?.appearance)}
-            {renderTestRow("Reaction", patient.urineTest?.reaction)}
-            {renderTestRow("Specific Gravity", patient.urineTest?.specificGravity)}
-            {renderTestRow("Pus Cells", patient.urineTest?.pusCells)}
-            {renderTestRow("Epithelial Cells", patient.urineTest?.epithelialCells)}
-            {renderTestRow("Red Blood Cells", patient.urineTest?.redBloodCell)}
-            {renderTestRow("Spermatozoa", patient.urineTest?.spermatozoa)}
-            {renderTestRow("Casts", patient.urineTest?.casts)}
-            {renderTestRow("Crystals", patient.urineTest?.crystals)}
-            {renderTestRow("Yeast Cells", patient.urineTest?.yeastCell)}
-            {renderTestRow("Bacteria", patient.urineTest?.bacteria)}
-            {renderTestRow("ESR", patient.urineTest?.esr)}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        {/* Urine Test Table */}
+        <TableContainer component={Paper} className="p-4 mb-6">
+          <Typography variant="h6" gutterBottom>Urine Test</Typography>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {renderTestRow("Colour", patient.urineTest?.colour)}
+              {renderTestRow("Appearance", patient.urineTest?.appearance)}
+              {renderTestRow("Reaction", patient.urineTest?.reaction)}
+              {renderTestRow("Specific Gravity", patient.urineTest?.specificGravity)}
+              {renderTestRow("Pus Cells", patient.urineTest?.pusCells)}
+              {renderTestRow("Epithelial Cells", patient.urineTest?.epithelialCells)}
+              {renderTestRow("Red Blood Cells", patient.urineTest?.redBloodCell)}
+              {renderTestRow("Spermatozoa", patient.urineTest?.spermatozoa)}
+              {renderTestRow("Casts", patient.urineTest?.casts)}
+              {renderTestRow("Crystals", patient.urineTest?.crystals)}
+              {renderTestRow("Yeast Cells", patient.urineTest?.yeastCell)}
+              {renderTestRow("Bacteria", patient.urineTest?.bacteria)}
+              {renderTestRow("ESR", patient.urineTest?.esr)}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-      {/* Lipid Profile */}
-      <TableContainer component={Paper} className="p-4 mb-6">
-        <Typography variant="h6" gutterBottom>Lipid Profile</Typography>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {renderTestRow("Cholesterol - Total", patient.lipidProfile?.cholesterolTotal)}
-            {renderTestRow("Triglycerides", patient.lipidProfile?.triglycerides)}
-            {renderTestRow("HDL Cholesterol", patient.lipidProfile?.hdlCholesterol)}
-            {renderTestRow("LDL Cholesterol", patient.lipidProfile?.ldlCholesterol)}
-            {renderTestRow("VLDL Cholesterol", patient.lipidProfile?.vldlCholesterol)}
-            {renderTestRow("Cholesterol/HDL Chol Ratio", patient.lipidProfile?.cholHdlCholRatio)}
-            {renderTestRow("LDL Chol/HDL Chol Ratio", patient.lipidProfile?.ldlHdlCholRatio)}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        {/* Microscopic Examination Table */}
+        <TableContainer component={Paper} className="p-4 mb-6">
+          <Typography variant="h6" gutterBottom>Microscopic Examination</Typography>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {renderTestRow("Pus Cells", patient.urineTest?.pusCells)}
+              {renderTestRow("Epithelial Cells", patient.urineTest?.epithelialCells)}
+              {renderTestRow("Red Blood Cells", patient.urineTest?.redBloodCell)}
+              {renderTestRow("Spermatozoa", patient.urineTest?.spermatozoa)}
+              {renderTestRow("Casts", patient.urineTest?.casts)}
+              {renderTestRow("Crystals", patient.urineTest?.crystals)}
+              {renderTestRow("Yeast Cells", patient.urineTest?.yeastCell)}
+              {renderTestRow("Bacteria", patient.urineTest?.bacteria)}
+              {renderTestRow("ESR", patient.urineTest?.esr)}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-      {/* TSH Test Table */}
-      <TableContainer component={Paper} className="p-4 mb-6">
-        <Typography variant="h6" gutterBottom>TSH Test</Typography>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
-              <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {renderTestRow("Triiodothyronine (T3)", patient.tshTest?.triiodothyronine)}
-            {renderTestRow("Thyroxine (T4)", patient.tshTest?.thyroxine)}
-            {renderTestRow("TSH (Thyroid Stimulating Hormone)", patient.tshTest?.tsh)}
-            {renderTestRow("SGOT (AST)", patient.tshTest?.sgot)}
-            {renderTestRow("SGPT (ALT)", patient.tshTest?.sgpt)}
-            {renderTestRow("Alkaline Phosphatase", patient.tshTest?.alkalinePhosphatase)}
-            {renderTestRow("Total Protein", patient.tshTest?.totalProtein)}
-            {renderTestRow("Albumin", patient.tshTest?.albumin)}
-            {renderTestRow("Globulin", patient.tshTest?.globulin)}
-            {renderTestRow("AIb/Glo Ratio", patient.tshTest?.albRatio)}
-            {renderTestRow("Platelet count", patient.tshTest?.plateletCount)}
-            {renderTestRow("Mean Platelet Volume (MPV)", patient.tshTest?.mpv)}
-            {renderTestRow("Plateletcrit", patient.tshTest?.plateletcrit)}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        {/* Lipid Profile */}
+        <TableContainer component={Paper} className="p-4 mb-6">
+          <Typography variant="h6" gutterBottom>Lipid Profile</Typography>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {renderTestRow("Cholesterol - Total", patient.lipidProfile?.cholesterolTotal)}
+              {renderTestRow("Triglycerides", patient.lipidProfile?.triglycerides)}
+              {renderTestRow("HDL Cholesterol", patient.lipidProfile?.hdlCholesterol)}
+              {renderTestRow("LDL Cholesterol", patient.lipidProfile?.ldlCholesterol)}
+              {renderTestRow("VLDL Cholesterol", patient.lipidProfile?.vldlCholesterol)}
+              {renderTestRow("Cholesterol/HDL Chol Ratio", patient.lipidProfile?.cholHdlCholRatio)}
+              {renderTestRow("LDL Chol/HDL Chol Ratio", patient.lipidProfile?.ldlHdlCholRatio)}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
+        {/* TSH Test Table */}
+        <TableContainer component={Paper} className="p-4 mb-6">
+          <Typography variant="h6" gutterBottom>TSH Test</Typography>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className="border border-gray-400"><strong>Test</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Value</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Range</strong></TableCell>
+                <TableCell className="border border-gray-400"><strong>Unit</strong></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {renderTestRow("Triiodothyronine (T3)", patient.tshTest?.triiodothyronine)}
+              {renderTestRow("Thyroxine (T4)", patient.tshTest?.thyroxine)}
+              {renderTestRow("TSH (Thyroid Stimulating Hormone)", patient.tshTest?.tsh)}
+              {renderTestRow("SGOT (AST)", patient.tshTest?.sgot)}
+              {renderTestRow("SGPT (ALT)", patient.tshTest?.sgpt)}
+              {renderTestRow("Alkaline Phosphatase", patient.tshTest?.alkalinePhosphatase)}
+              {renderTestRow("Total Protein", patient.tshTest?.totalProtein)}
+              {renderTestRow("Albumin", patient.tshTest?.albumin)}
+              {renderTestRow("Globulin", patient.tshTest?.globulin)}
+              {renderTestRow("AIb/Glo Ratio", patient.tshTest?.albRatio)}
+              {renderTestRow("Platelet count", patient.tshTest?.plateletCount)}
+              {renderTestRow("Mean Platelet Volume (MPV)", patient.tshTest?.mpv)}
+              {renderTestRow("Platelet Distribution (PDW)", patient.tshTest?.pdw)}
+              {renderTestRow("HIV I Antibodies", patient.tshTest?.hivFirst)}
+              {renderTestRow("HIV II Antibodies", patient.tshTest?.hivSecond)}
+              {renderTestRow("HBA1C", patient.tshTest?.HBA1C)}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+      </div>
       <div className="flex gap-5 px-10 pb-5 justify-end">
+        <button
+          onClick={handlePrint}
+          className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <FaPrint className="mr-2" /> Print
+        </button>
+        <button
+          onClick={() => navigate(`/admin/patients/${id}/report`)}
+          className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <FaArrowCircleDown className="mr-2" /> Download
+        </button>
         <button
           onClick={() => navigate(`/admin/patients/${patient._id}/edit`)}
           className="flex items-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"

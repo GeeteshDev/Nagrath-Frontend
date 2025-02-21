@@ -3,6 +3,9 @@ import { getPatients, deletePatient } from '../api/patientService';
 import { useNavigate } from 'react-router-dom';
 import { FaUserEdit, FaEye, FaTrash, FaFilePdf } from 'react-icons/fa';
 import SuperAdminLayout from './Layouts/SuperAdminLayout';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import * as XLSX from 'xlsx';
 
 const PatientList = () => {
   const [patients, setPatients] = useState([]);
@@ -15,10 +18,20 @@ const PatientList = () => {
       const token = JSON.parse(localStorage.getItem('user')).token;
       const data = await getPatients(token);
       setPatients(data);
-      setFilteredPatients(data); // Initially, show all patients
+      setFilteredPatients(data);
     };
     fetchPatients();
   }, []);
+
+
+
+  const downloadExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(filteredPatients);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Patients');
+    XLSX.writeFile(workbook, 'Patient_Report.xlsx');
+  };
+
 
   const handleDelete = async (id) => {
     const token = JSON.parse(localStorage.getItem('user')).token;
@@ -125,11 +138,6 @@ const PatientList = () => {
                     >
                       <FaTrash size={14} />
                     </button>
-                    <button
-                      className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white hover:bg-red-700 transition-colors"
-                    >
-                      <FaFilePdf size={14} />
-                    </button>
                   </div>
                 </td>
               </tr>
@@ -137,6 +145,14 @@ const PatientList = () => {
           </tbody>
         </table>
       </div>
+      <button
+        onClick={downloadExcel}
+        variant="contained"
+        color="primary"
+        className="w-32 h-10 rounded-sm mx-7 bg-[#ff6015] hover:bg-blue-700"
+      >
+        Download
+      </button>
     </SuperAdminLayout>
   );
 };

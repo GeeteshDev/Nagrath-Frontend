@@ -313,6 +313,7 @@ const UpdatePatient = () => {
             {formData.photo && typeof formData.photo === 'string' && (
               <img src={`data:image/jpeg;base64,${formData.photo}`} alt="Patient" className="mb-2 rounded-lg w-24 h-24 object-cover" />
             )}
+            <label htmlFor="Photo" className="mb-2 font-medium">Photo :</label>
             <input
               type="file"
               onChange={handleFileChange}
@@ -524,59 +525,6 @@ const UpdatePatient = () => {
             </table>
           </div>
 
-
-          {/* TSH Test Table */}
-          {/* <div className="overflow-auto mt-6">
-            <h2 className="text-lg font-bold mb-2">TSH Test</h2>
-            <table className="w-full border border-gray-300 mt-4 text-sm">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="p-2 border border-gray-300">Name of Test</th>
-                  <th className="p-2 border border-gray-300">Observed Value</th>
-                  <th className="p-2 border border-gray-300">Unit</th>
-                  <th className="p-2 border border-gray-300">Normal Range</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.keys(formData.tshTest || {}).map((test) => (
-                  <tr key={test}>
-                    <td className="p-2 border">{test}</td>
-                    <td className="p-2 border">
-                      <input
-                        type="text"
-                        name={`tshTest.${test}.value`}
-                        value={formData.tshTest[test]?.value || ''}
-                        onChange={handleChange}
-                        className="border border-gray-300 p-2 rounded w-full"
-                      />
-                    </td>
-                    <td className="p-2 border">
-                      <span className="border border-gray-300 p-2 rounded w-full block">{formData.tshTest[test]?.unit || ''}</span>
-                    </td>
-                    <td className="p-2 border">
-                      {formData.tshTest[test]?.options ? (
-                        <select
-                          name={`tshTest.${test}.range`}
-                          value={formData.tshTest[test]?.range || ''}
-                          onChange={handleChange}
-                          className="border border-gray-300 p-2 rounded w-full"
-                        >
-                          <option value="">Select Range</option>
-                          {formData.tshTest[test].options.map((option, index) => (
-                            <option key={index} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <span className="border border-gray-300 p-2 rounded w-full block">{formData.tshTest[test]?.range || ''}</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div> */}
           <div className="overflow-auto mt-6">
             <h2 className="text-lg font-bold mb-2">TSH Test</h2>
             <table className="w-full border border-gray-300 mt-4 text-sm">
