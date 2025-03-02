@@ -22,14 +22,14 @@ const UpdatePatient = () => {
     country: '',
     bloodGroup: '',
     photo: '',
-    hemoglobin: { value: '', range: '', unit: '' },
+    hemoglobin: { value: '', range: '', options: ['Male: 13.5-17.5', 'Female: 12-16'], unit: 'g/dl' },
     bloodPressure: { value: '', range: '', unit: '' },
     heartRate: { value: '', range: '', unit: '' },
     fastingBloodSugar: { value: '', range: '', unit: '' },
     calcium: { value: '', range: '', options: ['Adult: 8.5-11.0', 'Child: 6.7-10.5'], unit: 'mg/dL' },
     bloodCbc: {
       rbcCount: { value: '', unit: 'milli./cu.mm', range: '4.5-5.9' },
-      packedCellVolume: { value: '', unit: '%', range: '37.53' },
+      packedCellVolume: { value: '', unit: '%', range: '', options: ['Male: 37-53', 'Female: 33-51'] },
       meanCellVolume: { value: '', unit: 'fl', range: '80-100' },
       meanCellHemoglobin: { value: '', unit: 'pg/g/dl', range: '26.34' },
       meanCellHbConc: { value: '', unit: '%', range: '11-16' },
@@ -120,7 +120,7 @@ const UpdatePatient = () => {
           ...formData,
           ...patientData,
           dateOfBirth: patientData.dateOfBirth?.split('T')[0] || '',
-          hemoglobin: patientData.hemoglobin || { value: '', range: '', unit: '' },
+          hemoglobin: patientData.hemoglobin || { value: '', range: '', unit: '', options:['Male: 13.5-17.5', 'Female: 12-16'] },
           bloodPressure: patientData.bloodPressure || { value: '', range: '', unit: '' },
           heartRate: patientData.heartRate || { value: '', range: '', unit: '' },
           fastingBloodSugar: patientData.fastingBloodSugar || { value: '', range: '70-100', unit: 'mg/dL' },
@@ -129,7 +129,7 @@ const UpdatePatient = () => {
             ...formData.bloodCbc,
             ...patientData.bloodCbc,
             rbcCount: patientData.bloodCbc?.rbcCount || { value: '', unit: 'milli./cu.mm', range: '4.5-5.9' },
-            packedCellVolume: patientData.bloodCbc?.packedCellVolume || { value: '', unit: '%', range: '37.53' },
+            packedCellVolume: patientData.bloodCbc?.packedCellVolume || { value: '', unit: '%', range: '', options: ['Male: 37-53', 'Female: 33-51'] },
             meanCellVolume: patientData.bloodCbc?.meanCellVolume || { value: '', unit: 'fl', range: '80-100' },
             meanCellHemoglobin: patientData.bloodCbc?.meanCellHemoglobin || { value: '', unit: 'pg', range: '26-34' },
             meanCellHbConc: patientData.bloodCbc?.meanCellHbConc || { value: '', unit: 'g/dl', range: '32-36' },
@@ -404,7 +404,24 @@ const UpdatePatient = () => {
                       <span className="border border-gray-300 p-2 rounded w-full block">{formData.bloodCbc[test]?.unit || ''}</span>
                     </td>
                     <td className="p-2 border">
+                      {/* Check if `options` exist for the test */}
+                      {formData.bloodCbc[test]?.options ? (
+                      <select
+                      name={`${test}.range`}
+                      value={formData.bloodCbc[test]?.range || ''}
+                      onChange={handleChange}
+                      className="border border-gray-300 p-2 rounded w-full"
+                      >
+                      <option value="">Select Range</option>
+                      {formData.bloodCbc[test].options.map((option, index) => (
+                      <option key={index} value={option}>
+                      {option}
+                      </option>
+                      ))}
+                      </select>
+                      ) : (
                       <span className="border border-gray-300 p-2 rounded w-full block">{formData.bloodCbc[test]?.range || ''}</span>
+                      )}
                     </td>
                   </tr>
                 ))}
