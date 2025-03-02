@@ -18,14 +18,14 @@ const CreatePatient = () => {
     district: '',
     state: '',
     country: '',
-    hemoglobin: { value: '', range: '13.5-17.5', unit: 'g/dl' },
+    hemoglobin: { value: '', range: '', options: ['Male: 13.5-17.5', 'Female: 12-16'], unit: 'g/dl' },
     bloodPressure: { value: '', range: '120/80', unit: 'mmHg' },
     heartRate: { value: '', range: '60-100', unit: 'bpm' },
     fastingBloodSugar: { value: '', range: '70-100', unit: 'mg/dL' },
     calcium: { value: '', range: '', options: ['Adult: 8.5-11.0', 'Child: 6.7-10.5'], unit: 'mg/dL' },
     bloodCbc: {
       rbcCount: { value: '', unit: 'milli./cu.mm', range: '4.5-5.9' },
-      packedCellVolume: { value: '', unit: '%', range: '37.53' },
+      packedCellVolume: { value: '', unit: '%', range: '', options: ['Male: 37-53', 'Female: 33-51'] },
       meanCellVolume: { value: '', unit: 'fl', range: '80-100' },
       meanCellHemoglobin: { value: '', unit: 'pg', range: '26-34' },
       meanCellHbConc: { value: '', unit: 'g/dl', range: '32-36' },
@@ -455,7 +455,7 @@ const CreatePatient = () => {
           </div>
 
           {/* Medical Test Inputs */}
-          <h2 className="text-lg font-semibold mt-8 mb-4">Tests</h2>
+{/*           <h2 className="text-lg font-semibold mt-8 mb-4">Tests</h2>
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-200 text-left">
@@ -504,10 +504,62 @@ const CreatePatient = () => {
                 </tr>
               ))}
             </tbody>
+          </table> */}
+          {/* Medical Test Inputs */}
+          <h2 className="text-lg font-semibold mt-8 mb-4">Tests</h2>
+          <table className="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200 text-left">
+                <th className="p-2 border border-gray-300 font-semibold">Name of Test</th>
+                <th className="p-2 border border-gray-300 font-semibold">Observed Values</th>
+                <th className="p-2 border border-gray-300 font-semibold">Unit</th>
+                <th className="p-2 border border-gray-300 font-semibold">Reference Range</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { name: 'Hemoglobin', id: 'hemoglobin', unit: 'g/dl', range: ['Male 37-53', 'Female 33-51'] },
+                { name: 'Blood Pressure', id: 'bloodPressure', unit: 'mmHg', range: '120/80' },
+                { name: 'Heart Rate', id: 'heartRate', unit: 'bpm', range: '60-100' },
+                { name: 'Fasting Blood Sugar', id: 'fastingBloodSugar', unit: 'mg/dL', range: '70-100' },
+                { name: 'Calcium', id: 'calcium', unit: 'mg/dL', range: ['Adult: 8.5-11.0', 'Child: 6.7-10.5'] },
+              ].map((test) => (
+                <tr key={test.id}>
+                  <td className="p-2 border border-gray-300">{test.name}</td>
+                  <td className="p-2 border border-gray-300">
+                    <input
+                      type="text"
+                      name={`${test.id}.value`}
+                      value={formData[test.id]?.value || ''}
+                      onChange={handleChange}
+                      className="w-full border p-1"
+                    />
+                  </td>
+                  <td className="p-2 border border-gray-300 text-gray-600">{test.unit}</td>
+                  <td className="p-2 border border-gray-300 text-gray-600">
+                    {Array.isArray(test.range) ? (
+                      <select
+                        name={`${test.id}.range`}
+                        value={formData[test.id]?.range || ''}
+                        onChange={handleChange}
+                        className="w-full border p-1"
+                      >
+                        <option value="" disabled>Select Range</option>
+                        {test.range.map((rangeValue) => (
+                          <option key={rangeValue} value={rangeValue}>{rangeValue}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      test.range
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
 
           {/* Blood CBC */}
-          <h2 className="text-lg font-bold mt-8 mb-4">Blood CBC</h2>
+{/*           <h2 className="text-lg font-bold mt-8 mb-4">Blood CBC</h2>
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-200 text-left">
@@ -559,6 +611,80 @@ const CreatePatient = () => {
                   </td>
                   <td className="p-2 border border-gray-300">
                     <span>{test.range}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table> */}
+          {/* Blood CBC */}
+          <h2 className="text-lg font-bold mt-8 mb-4">Blood CBC</h2>
+          <table className="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200 text-left">
+                <th className="p-2 border border-gray-300 font-semibold">Name of Test</th>
+                <th className="p-2 border border-gray-300 font-semibold">Observed Values</th>
+                <th className="p-2 border border-gray-300 font-semibold">Unit</th>
+                <th className="p-2 border border-gray-300 font-semibold">Normal Range</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { label: 'R.B.C Count', name: 'rbcCount', unit: 'milli./cu.mm', range: '4.5-5.9' },
+                { label: 'Packed Cell Volume (HCT)', name: 'packedCellVolume', unit: '%', range: ['Male: 37-53', 'Female: 33-51'] },
+                { label: 'Mean Cell Volume (MCV)', name: 'meanCellVolume', unit: 'fl', range: '80-100' },
+                { label: 'Mean Cell Hemoglobin (MCH)', name: 'meanCellHemoglobin', unit: 'pg/g/dl', range: '26.34' },
+                { label: 'Mean Cell Hb Conc (MCHC)', name: 'meanCellHbConc', unit: '%', range: '11-16' },
+                { label: 'RDW (CV)', name: 'rdwCV', unit: 'fl', range: '35-56' },
+                { label: 'RDW (SD)', name: 'rdwSD', unit: '/cumm', range: '4500-11000' },
+              ].map((test) => (
+                <tr key={test.name} className="border border-gray-300">
+                  <td className="p-2 border border-gray-300 font-medium">{test.label}</td>
+                  <td className="p-2 border border-gray-300">
+                    <input
+                      type="text"
+                      name={`bloodCbc.${test.name}.value`}
+                      value={formData.bloodCbc[test.name]?.value || ''}
+                      onChange={(e) => {
+                        const { name, value } = e.target;
+                        const [parentKey, childKey] = name.split('.');
+                        setFormData((prevState) => ({
+                          ...prevState,
+                          [parentKey]: {
+                            ...prevState[parentKey],
+                            [childKey]: {
+                              ...prevState[parentKey][childKey],
+                              value,
+                            },
+                          },
+                        }));
+                      }}
+                      placeholder={`Enter ${test.label}`}
+                      required
+                      className="w-full border p-2"
+                    />
+                  </td>
+                  <td className="p-2 border border-gray-300">
+                    <span>{test.unit}</span>
+                  </td>
+                  <td className="p-2 border border-gray-300">
+                    {test.name === 'packedCellVolume' ? (
+                      <select
+                        name={`bloodCbc.${test.name}.range`}
+                        value={formData.bloodCbc[test.name]?.range || ''}
+                        onChange={handleChange}
+                        className="w-full border p-2"
+                      >
+                        <option value="" disabled>Select Range</option>
+                        {test.range.map((range, index) => (
+                          <option key={index} value={range}>
+                            {range}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <span>{test.range}</span>
+                    )}
+                    {/* <span>{test.range}</span> */}
                   </td>
                 </tr>
               ))}
